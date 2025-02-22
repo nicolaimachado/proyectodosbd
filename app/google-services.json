@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1068900848666",
+    "project_id": "dosbasesdedatos",
+    "storage_bucket": "dosbasesdedatos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068900848666:android:d6b9f62af25f2afee3eda3",
+        "android_client_info": {
+          "package_name": "com.nicolaischirmer.proyectodosbd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068900848666-kjdm46r5k7obm0c9kukqo23g7802nvfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nicolaischirmer.proyectodosbd",
+            "certificate_hash": "10738c9037e7ed2e701e0ed60e024b0ed71966dc"
+          }
+        },
+        {
+          "client_id": "1068900848666-sechvjtcfs83o0sa3nkrabbd24snk6hl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_lVBx895xFqTyNkQ5aS9dm3-_CcEpBSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068900848666-sechvjtcfs83o0sa3nkrabbd24snk6hl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
