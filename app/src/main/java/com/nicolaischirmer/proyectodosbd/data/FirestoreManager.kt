@@ -10,6 +10,12 @@ import com.nicolaischirmer.proyectodosbd.model.WeaponDB
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.retry
+import java.io.IOException
+
 
 class FirestoreManager(auth: AuthManager, context: Context) {
     private val firestore = FirebaseFirestore.getInstance()
@@ -20,28 +26,49 @@ class FirestoreManager(auth: AuthManager, context: Context) {
         const val CHARACTER_COLLECTION = "Characters"
     }
 
+
     fun getWeapons(): Flow<List<Weapon>> {
         return firestore.collection(WEAPON_COLLECTION)
-            .whereEqualTo("userId", userId)
             .snapshots()
+            .retry(3) { e ->
+                if (e is IOException || e is FirebaseFirestoreException) {
+                    delay(1000) // Delay before retrying
+                    true // Retry
+                } else {
+                    false // Do not retry
+                }
+            }
             .map { qs ->
                 qs.documents.mapNotNull { ds ->
-                    ds.toObject(WeaponDB::class.java)?.let { weaponDB ->
-                        Weapon(
-                            id = ds.id,
-                            userId = weaponDB.userId,
-                            name = weaponDB.name,
-                            description = weaponDB.description,
-                            type = weaponDB.type,
-                            damage = weaponDB.damage
-                        )
+                    try {
+                        ds.toObject(WeaponDB::class.java)?.let { weaponDB ->
+                            val weapon = Weapon(
+                                id = ds.id,
+                                userId = weaponDB.userId,
+                                name = weaponDB.name,
+                                description = weaponDB.description,
+                                type = weaponDB.type,
+                                damage = weaponDB.damage
+                            )
+                            Log.d("FirestoreManager", "Weapon name: ${weapon.name}")
+                            weapon
+                        }
+                    } catch (e: Exception) {
+                        Log.e("FirestoreManager", "Error converting document to Weapon: ${e.message}")
+                        null
                     }
                 }
             }
     }
 
     suspend fun addWeapon(weapon: Weapon) {
-        firestore.collection(WEAPON_COLLECTION).add(weapon).await()
+        val db = FirebaseFirestore.getInstance()
+        val weaponRef = db.collection(WEAPON_COLLECTION)
+
+        val documentReference = weaponRef.add(weapon).await()
+        val weaponId = documentReference.id
+
+        documentReference.update("id", weaponId).await()
     }
 
     suspend fun updateWeapon(weapon: Weapon) {
@@ -90,7 +117,13 @@ class FirestoreManager(auth: AuthManager, context: Context) {
     }
 
     suspend fun addCharacter(character: Character) {
-        firestore.collection(CHARACTER_COLLECTION).add(character).await()
+        val db = FirebaseFirestore.getInstance()
+        val characterRef = db.collection(CHARACTER_COLLECTION)
+
+        val documentReference = characterRef.add(character).await()
+        val charId = documentReference.id
+
+        documentReference.update("id", charId).await()
     }
 
     suspend fun updateCharacter(character: Character) {

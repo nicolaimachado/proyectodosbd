@@ -35,7 +35,7 @@ class InicioViewModel(val firestoreManager: FirestoreManager) : ViewModel() {
 
     fun addWeapon(weapon: Weapon) {
         viewModelScope.launch {
-            firestoreManager.addWeapon(weapon)
+            firestoreManager.addWeapon(weapon.copy(id = null))
         }
     }
 

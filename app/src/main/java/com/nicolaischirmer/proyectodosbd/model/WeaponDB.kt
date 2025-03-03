@@ -1,6 +1,7 @@
 package com.nicolaischirmer.proyectodosbd.model
 
 data class WeaponDB(
+    val id: String = "",
     val userId: String = "",
     val name: String = "",
     val description: String = "",
