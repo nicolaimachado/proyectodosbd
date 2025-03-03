@@ -119,7 +119,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logoarmas),
                 contentDescription = "Firebase",
                 modifier = Modifier.size(100.dp)
             )
